@@ -1,0 +1,20 @@
+# Build output (all labs)
+build/
+bin/
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.lib
+*.exp
+
+# IDE / editor
+.vs/
+.vscode/
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Lab-specific
+Lab-1/docs/

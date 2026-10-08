@@ -1,0 +1,54 @@
+[
+    uuid(d42b754e-3d21-4ed8-9c11-9338987c4216),
+    version(1.0),
+    pointer_default(unique)
+]
+interface FileManager
+{
+    const unsigned long FM_MAX_CHUNK = 1048576;
+    const unsigned short FM_NAME_LEN = 256;
+
+    typedef [context_handle] void* FM_SESSION;
+
+    long FmLogin(
+        [in] handle_t hBinding,
+        [in, string] const wchar_t* domain,
+        [in, string] const wchar_t* user,
+        [in, string] const wchar_t* password,
+        [out] FM_SESSION* session);
+
+    long FmLogout(
+        [in, out] FM_SESSION* session);
+
+    long FmWhoAmI(
+        [in] FM_SESSION session,
+        [out] wchar_t processUser[FM_NAME_LEN],
+        [out] wchar_t threadUser[FM_NAME_LEN]);
+
+    long FmBeginUpload(
+        [in] FM_SESSION session,
+        [in, string] const wchar_t* uncPath);
+
+    long FmWriteChunk(
+        [in] FM_SESSION session,
+        [in, range(0, FM_MAX_CHUNK)] unsigned long size,
+        [in, size_is(size)] const byte* data);
+
+    long FmBeginDownload(
+        [in] FM_SESSION session,
+        [in, string] const wchar_t* uncPath,
+        [out] hyper* fileSize);
+
+    long FmReadChunk(
+        [in] FM_SESSION session,
+        [in, range(1, FM_MAX_CHUNK)] unsigned long maxSize,
+        [out, size_is(maxSize), length_is(*bytesRead)] byte* data,
+        [out] unsigned long* bytesRead);
+
+    long FmCloseFile(
+        [in] FM_SESSION session);
+
+    long FmDeleteFile(
+        [in] FM_SESSION session,
+        [in, string] const wchar_t* uncPath);
+}
